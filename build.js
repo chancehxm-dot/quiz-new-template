@@ -282,7 +282,7 @@ function canonical(rel) { return SITE_URL + '/' + rel; }
 
 function adInline() {
   return '' +
-    '<div class="ad-inline" id="ad-slot-inline" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-inline" id="div-gpt-ad-1783998391391-0" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
       '<div class="ad-box" id="ad-box-inline">Ad unit — content placement (replace with your ad code)</div>' +
     '</div>';
@@ -290,7 +290,7 @@ function adInline() {
 
 function adAnchor() {
   return '' +
-    '<div class="ad-anchor" id="ad-slot-anchor" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-anchor" id="div-gpt-ad-1783998364331-0" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
       '<div class="ad-box" id="ad-box-anchor">Ad unit — anchored footer placement (replace with your ad code)</div>' +
     '</div>';
@@ -441,9 +441,9 @@ function buildIndex() {
         '<a class="btn" href="' + href(questionPath(questions[0])) + '" onclick="startRandomQuiz();return false;">Start a Random ' + QUIZ_LEN + '-Question Quiz</a>' +
         ' <a class="btn btn-ghost" href="#bank">Browse All Questions</a>' +
       '</div>' +
+      adInline() +
       '<a id="bank"></a>' +
       sections +
-      adInline() +
       '<div class="card">' +
         '<h2>How it works</h2>' +
         '<p>You can answer questions in any order. After each answer you land on its own page with a short interpretation, then continue to the next question in your quiz. When you have answered some, open your <a href="' + RESULT_HREF + '">personality snapshot</a>.</p>' +
@@ -472,13 +472,13 @@ function buildQuestion(q) {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + HOME + '">&larr; Back to home</a>' +
+      adInline() +
       '<div class="card">' +
         '<span class="q-index">' + esc(dim.code) + ' · ' + esc(dim.name) + '</span>' +
         '<h1>' + esc(q.question) + '</h1>' +
         '<p class="lead">' + esc(q.desc) + '</p>' +
         '<ul class="option-list">' + opts + '</ul>' +
       '</div>' +
-      adInline() +
       '<div class="card">' +
         '<p>Pick the option that feels most natural. Every option opens its own page with a short, personalized interpretation before you continue.</p>' +
       '</div>' +
@@ -516,6 +516,7 @@ function buildOption(q, pos) {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + href(questionPath(q)) + '">&larr; Back to question</a>' +
+      adInline() +
       '<div class="card">' +
         '<span class="tag">' + esc(dim.code) + ' · ' + esc(dim.name) + ' &middot; Option ' + n + ' of 10</span>' +
         '<h1>Your answer</h1>' +
@@ -524,7 +525,6 @@ function buildOption(q, pos) {
         '<p>Dimension explored: <strong>' + esc(dim.code) + '</strong> — ' + esc(dim.a) + ' vs ' + esc(dim.b) + '.</p>' +
         '<a class="btn" href="' + RESULT_HREF + '" onclick="continueQuiz(\'' + q.id + '\');return false;">Continue</a>' +
       '</div>' +
-      adInline() +
       '<div class="card">' +
         '<h2>What this means</h2>' +
         '<p>One choice is only a small signal. The full snapshot combines this with your other answers across the four dimensions.</p>' +
@@ -555,12 +555,12 @@ function buildResult() {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + HOME + '">&larr; Back to home</a>' +
+      adInline() +
       '<div class="card">' +
         '<h1>Your Personality Snapshot</h1>' +
         '<p class="lead">Based on the questions you answered, here is a simple, entertainment-only sketch of your style.</p>' +
         '<div id="resultBox">Loading your result…</div>' +
       '</div>' +
-      adInline() +
       '<div class="card">' +
         '<h2>About this snapshot</h2>' +
         '<p>This quiz covers all four MBTI dimensions (energy, information, decisions, structure). It is a friendly reflection tool, not a clinical test. Real personality is broader and changes with context.</p>' +
@@ -623,11 +623,11 @@ function legalPage(file, title, h1, paras, active) {
   var html = pageHead(title, desc, file) +
     header(active) +
     '<main>' +
+      adInline() +
       '<div class="card">' +
         '<h1>' + esc(h1) + '</h1>' +
         body +
       '</div>' +
-      adInline() +
     '</main>' +
     footer() +
     adAnchor() +
