@@ -1,5 +1,6 @@
 /* Build script for the MBTI Quick Insight quiz site.
-   Pure static HTML + ES5 output. Run with: node build.js */
+   Pure static HTML + ES5 output. Run with: node build.js
+   Files are organized into directories: questions/, legal/, assets/. */
 var fs = require('fs');
 var path = require('path');
 
@@ -8,11 +9,23 @@ var SITE_NAME = 'MindType';
 var SITE_TAGLINE = 'Quick MBTI Insight Quiz';
 var OUT = __dirname;
 
+/* Root-absolute link helpers (work from any directory depth) */
+var HOME = '/index.html';
+var PRIV = '/legal/privacy-policy.html';
+var TERM = '/legal/terms-of-service.html';
+var DIS = '/legal/disclaimer.html';
+var ABOUT = '/legal/about-us.html';
+var RESULT_PATH = 'result/index.html';
+var RESULT_HREF = '/result/';
+
+function questionPath(q) { return 'questions/q' + q.num + '.html'; }
+function optionPath(q, n) { return 'questions/q' + q.num + '-' + n + '.html'; }
+function href(rel) { return '/' + rel; }
+
 /* ---------- Data: 3 questions, each 10 original options ---------- */
 var questions = [
   {
     num: 1,
-    file: 'q1.html',
     dim: 'EI',
     poleA: 'Introvert-leaning',
     poleB: 'Extravert-leaning',
@@ -99,8 +112,8 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
-function canonical(url) {
-  return SITE_URL + '/' + url;
+function canonical(rel) {
+  return SITE_URL + '/' + rel;
 }
 
 function adInline() {
@@ -137,19 +150,19 @@ function cookieBanner() {
 }
 
 function header(active) {
-  function link(href, label, key) {
+  function link(hrefPath, label, key) {
     var cls = (key === active) ? ' style="color:#4c6ef5;font-weight:700"' : '';
-    return '<a href="' + href + '"' + cls + '>' + label + '</a>';
+    return '<a href="' + hrefPath + '"' + cls + '>' + label + '</a>';
   }
   return '' +
     '<header class="site-header"><div class="wrap">' +
-      '<a class="brand" href="index.html">' + esc(SITE_NAME) + '</a>' +
+      '<a class="brand" href="' + HOME + '">' + esc(SITE_NAME) + '</a>' +
       '<nav class="nav">' +
-        link('index.html', 'Home', 'home') +
-        link('privacy-policy.html', 'Privacy', 'privacy') +
-        link('terms-of-service.html', 'Terms', 'terms') +
-        link('disclaimer.html', 'Disclaimer', 'disclaimer') +
-        link('about-us.html', 'About', 'about') +
+        link(HOME, 'Home', 'home') +
+        link(PRIV, 'Privacy', 'privacy') +
+        link(TERM, 'Terms', 'terms') +
+        link(DIS, 'Disclaimer', 'disclaimer') +
+        link(ABOUT, 'About', 'about') +
       '</nav>' +
     '</div></header>';
 }
@@ -159,15 +172,15 @@ function footer() {
     '<footer class="site-footer"><div class="wrap">' +
       '<div>&copy; ' + new Date().getFullYear() + ' ' + esc(SITE_NAME) + '. For entertainment and self-reflection only.</div>' +
       '<div>' +
-        '<a href="privacy-policy.html">Privacy Policy</a>' +
-        '<a href="terms-of-service.html">Terms of Service</a>' +
-        '<a href="disclaimer.html">Disclaimer</a>' +
-        '<a href="about-us.html">About Us</a>' +
+        '<a href="' + PRIV + '">Privacy Policy</a>' +
+        '<a href="' + TERM + '">Terms of Service</a>' +
+        '<a href="' + DIS + '">Disclaimer</a>' +
+        '<a href="' + ABOUT + '">About Us</a>' +
       '</div>' +
     '</div></footer>';
 }
 
-function pageHead(title, description, url) {
+function pageHead(title, description, rel) {
   return '' +
     '<!DOCTYPE html>' +
     '<html lang="en">' +
@@ -176,13 +189,13 @@ function pageHead(title, description, url) {
       '<meta name="viewport" content="width=device-width, initial-scale=1">' +
       '<title>' + esc(title) + '</title>' +
       '<meta name="description" content="' + esc(description) + '">' +
-      '<link rel="canonical" href="' + canonical(url) + '">' +
+      '<link rel="canonical" href="' + canonical(rel) + '">' +
       '<meta property="og:type" content="website">' +
       '<meta property="og:title" content="' + esc(title) + '">' +
       '<meta property="og:description" content="' + esc(description) + '">' +
-      '<meta property="og:url" content="' + canonical(url) + '">' +
+      '<meta property="og:url" content="' + canonical(rel) + '">' +
       '<meta name="twitter:card" content="summary">' +
-      '<link rel="stylesheet" href="assets/style.css">' +
+      '<link rel="stylesheet" href="/assets/style.css">' +
     '</head><body>';
 }
 
@@ -197,7 +210,7 @@ function buildIndex() {
   var qList = '';
   for (var i = 0; i < questions.length; i++) {
     var q = questions[i];
-    qList += '<li><a href="' + q.file + '"><span class="num">' + q.num + '</span>' + esc(q.question) + '</a></li>';
+    qList += '<li><a href="' + href(questionPath(q)) + '"><span class="num">' + q.num + '</span>' + esc(q.question) + '</a></li>';
   }
   var html = pageHead(title, desc, 'index.html') +
     header('home') +
@@ -206,7 +219,7 @@ function buildIndex() {
         '<h1>' + esc(SITE_NAME) + ': ' + esc(SITE_TAGLINE) + '</h1>' +
         '<p class="lead">Three short questions. Ten honest options each. At the end you get a simple personality snapshot built from how you recharge, take in information, and make decisions.</p>' +
         '<p>This is a light, entertainment-focused quiz inspired by MBTI ideas. It is for fun and gentle self-reflection, not a clinical or scientific assessment.</p>' +
-        '<a class="btn" href="q1.html">Start the Quiz</a>' +
+        '<a class="btn" href="' + href(questionPath(questions[0])) + '">Start the Quiz</a>' +
       '</div>' +
       adInline() +
       '<div class="card">' +
@@ -232,13 +245,13 @@ function buildQuestion(q) {
   var opts = '';
   for (var i = 0; i < q.options.length; i++) {
     var n = i + 1;
-    var href = 'q' + q.num + '-' + n + '.html';
-    opts += '<li><a href="' + href + '"><span class="num">' + n + '</span>' + esc(q.options[i]) + '</a></li>';
+    var optHref = href(optionPath(q, n));
+    opts += '<li><a href="' + optHref + '"><span class="num">' + n + '</span>' + esc(q.options[i]) + '</a></li>';
   }
-  var html = pageHead(title, desc, q.file) +
+  var html = pageHead(title, desc, questionPath(q)) +
     header('home') +
     '<main>' +
-      '<a class="back-link" href="index.html">&larr; Back to home</a>' +
+      '<a class="back-link" href="' + HOME + '">&larr; Back to home</a>' +
       '<div class="card">' +
         '<span class="q-index">Question ' + q.num + ' of 3</span>' +
         '<h1>' + esc(q.question) + '</h1>' +
@@ -254,7 +267,7 @@ function buildQuestion(q) {
     adAnchor() +
     cookieBanner() +
     pageClose();
-  writeFile(q.file, html);
+  writeFile(questionPath(q), html);
 }
 
 function strength(pos) {
@@ -267,7 +280,7 @@ function strength(pos) {
 }
 
 function buildOption(q, pos) {
-  var n = pos; // 1..10
+  var n = pos;
   var optText = q.options[pos - 1];
   var leansB = pos >= 6;
   var pole = leansB ? q.poleB : q.poleA;
@@ -277,17 +290,18 @@ function buildOption(q, pos) {
   var desc = 'You chose: ' + optText + ' This page explains what that choice suggests about your ' + q.dim + ' style.';
   var interpret = 'Your answer leans <strong>' + str + ' ' + esc(pole) + '</strong>. ' + esc(sideText);
   var storeKey = 'mbti_q' + q.num;
-  var html = pageHead(title, desc, 'q' + q.num + '-' + n + '.html') +
+  var nextHref = href(q.next === 'result.html' ? RESULT_HREF.substring(1) : questionPath({ num: q.num + 1 }));
+  var html = pageHead(title, desc, optionPath(q, n)) +
     header('home') +
     '<main>' +
-      '<a class="back-link" href="' + q.file + '">&larr; Back to question</a>' +
+      '<a class="back-link" href="' + href(questionPath(q)) + '">&larr; Back to question</a>' +
       '<div class="card">' +
         '<span class="tag">Question ' + q.num + ' of 3 &middot; Option ' + n + ' of 10</span>' +
         '<h1>Your answer</h1>' +
         '<p class="lead">"' + esc(optText) + '"</p>' +
         '<p>' + interpret + '</p>' +
         '<p>Dimension explored: <strong>' + esc(q.dim) + '</strong> — ' + esc(q.poleA) + ' vs ' + esc(q.poleB) + '.</p>' +
-        '<a class="btn" href="' + q.next + '">' + esc(q.nextLabel) + '</a>' +
+        '<a class="btn" href="' + nextHref + '">' + esc(q.nextLabel) + '</a>' +
       '</div>' +
       adInline() +
       '<div class="card">' +
@@ -302,16 +316,16 @@ function buildOption(q, pos) {
     '(function(){try{localStorage.setItem("' + storeKey + '","' + n + '");}catch(e){}})();' +
     '</script>' +
     pageClose();
-  writeFile('q' + q.num + '-' + n + '.html', html);
+  writeFile(optionPath(q, n), html);
 }
 
 function buildResult() {
   var title = 'Your MBTI-Style Personality Snapshot — ' + SITE_NAME;
   var desc = 'See the personality snapshot built from your three answers: energy style, information style, and decision style, combined into a simple three-letter sketch.';
-  var html = pageHead(title, desc, 'result.html') +
+  var html = pageHead(title, desc, RESULT_PATH) +
     header('home') +
     '<main>' +
-      '<a class="back-link" href="q3.html">&larr; Back to last question</a>' +
+      '<a class="back-link" href="' + href(questionPath(questions[2])) + '">&larr; Back to last question</a>' +
       '<div class="card">' +
         '<h1>Your Personality Snapshot</h1>' +
         '<p class="lead">Based on the three questions you answered, here is a simple, entertainment-only sketch of your style.</p>' +
@@ -321,7 +335,7 @@ function buildResult() {
       '<div class="card">' +
         '<h2>About this snapshot</h2>' +
         '<p>This quiz covers three of the four MBTI dimensions (energy, information, and decisions). It is a friendly reflection tool, not a clinical test. Real personality is broader and changes with context.</p>' +
-        '<a class="btn" href="index.html">Retake the Quiz</a>' +
+        '<a class="btn" href="' + HOME + '">Retake the Quiz</a>' +
       '</div>' +
     '</main>' +
     footer() +
@@ -333,7 +347,7 @@ function buildResult() {
     '  var q1=get("mbti_q1"),q2=get("mbti_q2"),q3=get("mbti_q3");' +
     '  var box=document.getElementById("resultBox");' +
     '  if(!q1||!q2||!q3){' +
-    '    box.innerHTML="<p>We could not find your answers. Please <a href=\'q1.html\'>start the quiz</a> again.</p>";' +
+    '    box.innerHTML="<p>We could not find your answers. Please <a href=\'' + href(questionPath(questions[0])) + '\'>start the quiz</a> again.</p>";' +
     '    return;' +
     '  }' +
     '  function letter(v,a,b){if(v===0)return "?";return v>=6?b:a;}' +
@@ -352,7 +366,7 @@ function buildResult() {
     '})();' +
     '</script>' +
     pageClose();
-  writeFile('result.html', html);
+  writeFile(RESULT_PATH, html);
 }
 
 /* ---------- Legal / SEO pages ---------- */
@@ -379,7 +393,7 @@ function legalPage(file, title, h1, paras, active) {
 }
 
 function buildLegal() {
-  legalPage('privacy-policy.html', 'Privacy Policy — ' + SITE_NAME, 'Privacy Policy', [
+  legalPage('legal/privacy-policy.html', 'Privacy Policy — ' + SITE_NAME, 'Privacy Policy', [
     'This Privacy Policy explains how ' + SITE_NAME + ' ("we", "us") handles information when you use this quiz website.',
     'We do not require you to create an account. The quiz stores your answer choices only in your own browser using local storage, so we never receive or store them on our servers.',
     'We use cookies and similar technologies, including third-party advertising cookies such as Google AdSense, to measure traffic and show relevant ads. You can accept or clear cookies through your browser settings.',
@@ -388,7 +402,7 @@ function buildLegal() {
     'If you have questions about this policy, you can contact us through the About page.'
   ], 'privacy');
 
-  legalPage('terms-of-service.html', 'Terms of Service — ' + SITE_NAME, 'Terms of Service', [
+  legalPage('legal/terms-of-service.html', 'Terms of Service — ' + SITE_NAME, 'Terms of Service', [
     'By using ' + SITE_NAME + ', you agree to these Terms of Service.',
     'This website provides a light, entertainment-focused personality quiz. Results are for fun and self-reflection and must not be used for medical, hiring, clinical, financial, or legal decisions.',
     'All content, including questions and interpretations, is provided "as is" without warranty of any kind.',
@@ -397,7 +411,7 @@ function buildLegal() {
     'We may update these terms at any time. Continued use after changes means you accept the updated terms.'
   ], 'terms');
 
-  legalPage('disclaimer.html', 'Disclaimer — ' + SITE_NAME, 'Disclaimer', [
+  legalPage('legal/disclaimer.html', 'Disclaimer — ' + SITE_NAME, 'Disclaimer', [
     'The quiz on this site is inspired by MBTI concepts but is not affiliated with, endorsed by, or approved by the official MBTI instrument or its publishers.',
     'Results are generated for entertainment and gentle self-reflection. They are not psychological assessments, diagnoses, or scientific measurements.',
     'Do not use this quiz to make decisions about health, relationships, employment, finances, or safety.',
@@ -405,7 +419,7 @@ function buildLegal() {
     'Third-party advertisements and links are provided by external parties; their accuracy and practices are their own responsibility.'
   ], 'disclaimer');
 
-  legalPage('about-us.html', 'About Us — ' + SITE_NAME, 'About Us', [
+  legalPage('legal/about-us.html', 'About Us — ' + SITE_NAME, 'About Us', [
     SITE_NAME + ' is a small project that builds friendly, quick personality quizzes for entertainment and light self-reflection.',
     'Our goal is to make short, approachable quizzes that help people think about how they recharge, learn, and decide — without overclaiming what a quiz can tell them.',
     'This site may show advertisements, including Google AdSense, to support its upkeep. Advertisers are independent and not affiliated with our content.',
@@ -417,18 +431,18 @@ function buildLegal() {
 function buildRobots() {
   var txt = 'User-agent: *\n' +
     'Allow: /\n' +
-    'Disallow: /\n' +
     '\n' +
     'Sitemap: ' + SITE_URL + '/sitemap.xml\n';
   writeFile('robots.txt', txt);
 }
 
 function buildSitemap() {
-  var urls = ['index.html', 'q1.html', 'q2.html', 'q3.html', 'result.html',
-    'privacy-policy.html', 'terms-of-service.html', 'disclaimer.html', 'about-us.html'];
+  var urls = ['index.html', 'result.html',
+    'legal/privacy-policy.html', 'legal/terms-of-service.html', 'legal/disclaimer.html', 'legal/about-us.html'];
   for (var i = 0; i < questions.length; i++) {
+    urls.push(questionPath(questions[i]));
     for (var j = 1; j <= 10; j++) {
-      urls.push('q' + questions[i].num + '-' + j + '.html');
+      urls.push(optionPath(questions[i], j));
     }
   }
   var today = new Date().toISOString().slice(0, 10);
@@ -447,10 +461,14 @@ function buildSitemap() {
 }
 
 /* ---------- write + run ---------- */
-function writeFile(name, content) {
-  var p = path.join(OUT, name);
+function writeFile(rel, content) {
+  var p = path.join(OUT, rel);
+  var dir = path.dirname(p);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
   fs.writeFileSync(p, content, 'utf8');
-  console.log('wrote ' + name);
+  console.log('wrote ' + rel);
 }
 
 buildIndex();
