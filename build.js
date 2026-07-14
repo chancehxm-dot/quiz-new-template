@@ -389,7 +389,14 @@ function pageHead(title, description, rel) {
     '</head><body>';
 }
 
-function pageClose() { return '</body></html>'; }
+function libScripts() {
+  return '' +
+    '<script src="/libs/globalClickAndPv.js"></script>' +
+    '<script src="/libs/recaptcha.js"></script>' +
+    '<script src="/libs/adClickTracker.js"></script>';
+}
+
+function pageClose() { return libScripts() + '</body></html>'; }
 
 /* ---------- Homepage: full question bank + random quiz ---------- */
 function buildIndex() {
