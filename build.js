@@ -206,30 +206,38 @@ function pageClose() {
 /* ---------- Page builders ---------- */
 function buildIndex() {
   var title = SITE_NAME + ' — ' + SITE_TAGLINE;
-  var desc = 'A quick, friendly 3-question MBTI-style insight quiz. Answer three simple questions to see a personalized personality snapshot based on how you recharge, learn, and decide.';
-  var qList = '';
+  var desc = 'A quick, friendly 3-question MBTI-style insight quiz. Browse all three questions below and answer any of them directly — each option opens its own page with a short interpretation.';
+  var qCards = '';
   for (var i = 0; i < questions.length; i++) {
     var q = questions[i];
-    qList += '<li><a href="' + href(questionPath(q)) + '"><span class="num">' + q.num + '</span>' + esc(q.question) + '</a></li>';
+    var opts = '';
+    for (var j = 0; j < q.options.length; j++) {
+      var n = j + 1;
+      opts += '<li><a href="' + href(optionPath(q, n)) + '"><span class="num">' + n + '</span>' + esc(q.options[j]) + '</a></li>';
+    }
+    qCards += '<div class="card">' +
+        '<span class="q-index">Question ' + q.num + ' of 3</span>' +
+        '<h2><a href="' + href(questionPath(q)) + '">' + esc(q.question) + '</a></h2>' +
+        '<p class="lead">' + esc(q.desc) + '</p>' +
+        '<p class="dim-note">Dimension: <strong>' + esc(q.dim) + '</strong> — ' + esc(q.poleA) + ' vs ' + esc(q.poleB) + '</p>' +
+        '<ul class="option-list">' + opts + '</ul>' +
+        '<p class="more-link"><a href="' + href(questionPath(q)) + '">Open this question on its own page &rarr;</a></p>' +
+      '</div>';
   }
   var html = pageHead(title, desc, 'index.html') +
     header('home') +
     '<main>' +
       '<div class="card">' +
         '<h1>' + esc(SITE_NAME) + ': ' + esc(SITE_TAGLINE) + '</h1>' +
-        '<p class="lead">Three short questions. Ten honest options each. At the end you get a simple personality snapshot built from how you recharge, take in information, and make decisions.</p>' +
-        '<p>This is a light, entertainment-focused quiz inspired by MBTI ideas. It is for fun and gentle self-reflection, not a clinical or scientific assessment.</p>' +
-        '<a class="btn" href="' + href(questionPath(questions[0])) + '">Start the Quiz</a>' +
+        '<p class="lead">Three short questions. Ten honest options each. Answer any question directly from this page, or open it on its own. Pick the option that feels closest to you and read your interpretation on the next page.</p>' +
+        '<p>This is a light, entertainment-focused quiz inspired by MBTI ideas. It is for fun and gentle self-reflection, not a clinical or scientific assessment. Your choices are saved in your browser so we can build a personality snapshot at the end.</p>' +
+        '<a class="btn" href="' + href(questionPath(questions[0])) + '">Start from Question 1</a>' +
       '</div>' +
+      qCards +
       adInline() +
       '<div class="card">' +
-        '<h2>The three questions</h2>' +
-        '<p>Each question focuses on one part of personality style. Click any question to begin, or start from the first one.</p>' +
-        '<ul class="option-list">' + qList + '</ul>' +
-      '</div>' +
-      '<div class="card">' +
         '<h2>How it works</h2>' +
-        '<p>You answer one question per page. After each answer you land on its own page with a short interpretation, then move to the next question. Your choices are saved in your browser so the final snapshot can be built at the end.</p>' +
+        '<p>You can answer the questions in any order. After each answer you land on its own page with a short interpretation, then move to the next question. When all three are answered, open your <a href="' + RESULT_HREF + '">personality snapshot</a>.</p>' +
       '</div>' +
     '</main>' +
     footer() +
