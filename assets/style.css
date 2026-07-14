@@ -235,20 +235,34 @@ p { margin: 0 0 14px; }
 .ad-inline {
   margin: 22px 0;
   padding: 18px;
-  border: 1px dashed #c7cede;
+  border: 1px solid #ffd591;
   border-radius: 12px;
-  background: #fbfcfe;
+  background: #fff7e6;
   text-align: center;
-  color: var(--muted);
+  color: #ad6800;
   font-size: 14px;
 }
 
 .ad-inline .ad-label {
+  display: inline-block;
   text-transform: uppercase;
   letter-spacing: .08em;
   font-size: 11px;
-  color: #9aa3b2;
-  margin-bottom: 6px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #fa8c16;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.ad-inline .ad-box {
+  min-height: 90px;
+  line-height: 90px;
+  border: 1px dashed #ffbb6b;
+  border-radius: 8px;
+  background: #fffbe6;
+  color: #ad6800;
 }
 
 .ad-anchor {
@@ -256,32 +270,38 @@ p { margin: 0 0 14px; }
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -6px 18px rgba(31, 36, 48, 0.08);
+  background: #fff7e6;
+  border-top: 2px solid #ffd591;
+  box-shadow: 0 -6px 18px rgba(31, 36, 48, 0.10);
   padding: 10px;
   text-align: center;
-  color: var(--muted);
+  color: #ad6800;
   font-size: 13px;
   z-index: 50;
 }
 
 .ad-anchor .ad-label {
+  display: inline-block;
   text-transform: uppercase;
   letter-spacing: .08em;
   font-size: 10px;
-  color: #9aa3b2;
-  margin-bottom: 2px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #fa8c16;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 4px;
 }
 
 .ad-anchor .ad-box {
   max-width: 860px;
   margin: 0 auto;
-  min-height: 50px;
-  line-height: 50px;
-  border: 1px dashed #c7cede;
+  min-height: 60px;
+  line-height: 60px;
+  border: 1px dashed #ffbb6b;
   border-radius: 8px;
-  background: #fbfcfe;
+  background: #fffbe6;
+  color: #ad6800;
 }
 
 /* Cookie banner */

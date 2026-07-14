@@ -282,17 +282,17 @@ function canonical(rel) { return SITE_URL + '/' + rel; }
 
 function adInline() {
   return '' +
-    '<div class="ad-inline" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-inline" id="ad-slot-inline" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box">Ad unit — content placement (replace with your AdSense code)</div>' +
+      '<div class="ad-box" id="ad-box-inline">Ad unit — content placement (replace with your ad code)</div>' +
     '</div>';
 }
 
 function adAnchor() {
   return '' +
-    '<div class="ad-anchor" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-anchor" id="ad-slot-anchor" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box">Ad unit — anchored footer placement (replace with your AdSense code)</div>' +
+      '<div class="ad-box" id="ad-box-anchor">Ad unit — anchored footer placement (replace with your ad code)</div>' +
     '</div>';
 }
 
@@ -386,6 +386,7 @@ function pageHead(title, description, rel) {
       '<meta property="og:url" content="' + canonical(rel) + '">' +
       '<meta name="twitter:card" content="summary">' +
       '<link rel="stylesheet" href="/assets/style.css">' +
+      '<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>' +
     '</head><body>';
 }
 
@@ -393,7 +394,9 @@ function libScripts() {
   return '' +
     '<script src="/libs/globalClickAndPv.js"></script>' +
     '<script src="/libs/recaptcha.js"></script>' +
-    '<script src="/libs/adClickTracker.js"></script>';
+    '<script src="/libs/adClickTracker.js"></script>' +
+    '<script src="/libs/adxLimitControl.js"></script>' +
+    '<script src="/libs/adxLimitControl-detail.js"></script>';
 }
 
 function pageClose() { return libScripts() + '</body></html>'; }
