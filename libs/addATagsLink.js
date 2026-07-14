@@ -1,4 +1,3 @@
-// 监听页面加载完成后，获取所有的a标签，按照顺序从上到下，设置id=page-link-1，page-link-2...
 (function() {
     'use strict';
     

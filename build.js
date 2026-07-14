@@ -282,17 +282,21 @@ function canonical(rel) { return SITE_URL + '/' + rel; }
 
 function adInline() {
   return '' +
-    '<div class="ad-inline" id="div-gpt-ad-1783998391391-0" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-inline" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box" id="ad-box-inline">Ad unit — content placement (replace with your ad code)</div>' +
+      '<div class="ad-box" id="ad-box-inline">' +
+        '<div id="div-gpt-ad-1783998391391-0"></div>' +
+      '</div>' +
     '</div>';
 }
 
 function adAnchor() {
   return '' +
-    '<div class="ad-anchor" id="div-gpt-ad-1783998364331-0" role="complementary" aria-label="Advertisement">' +
+    '<div class="ad-anchor" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box" id="ad-box-anchor">Ad unit — anchored footer placement (replace with your ad code)</div>' +
+      '<div class="ad-box" id="ad-box-anchor">' +
+        '<div id="div-gpt-ad-1783998364331-0"></div>' +
+      '</div>' +
     '</div>';
 }
 
@@ -386,7 +390,7 @@ function pageHead(title, description, rel) {
       '<meta property="og:url" content="' + canonical(rel) + '">' +
       '<meta name="twitter:card" content="summary">' +
       '<link rel="stylesheet" href="/assets/style.css">' +
-      '<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>' +
+      '<script async id="gpt-lib" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>' +
     '</head><body>';
 }
 
