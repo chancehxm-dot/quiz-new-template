@@ -18,11 +18,8 @@
             },
         ],
 
-        // 锚定广告配置
-        anchor: {
-            path: '/23350280235/ca-pub-3453606224623962-tag/ab_play.appbleep.com_anchor_10',
-            format: 'TOP_ANCHOR'
-        },
+        // 锚定广告配置（已停用：页面不再使用固定定位广告位）
+        anchor: null,
 
         // 插屏广告配置
         interstitial: {
@@ -620,6 +617,7 @@
 
         // 显示锚定广告
         displayAnchorAd: function () {
+            if (!AD_CONFIG.anchor) return;
             window.googletag = window.googletag || { cmd: [] };
 
             if (typeof googletag === 'undefined' ||

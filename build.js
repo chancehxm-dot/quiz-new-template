@@ -280,24 +280,23 @@ function esc(s) {
 
 function canonical(rel) { return SITE_URL + '/' + rel; }
 
-function adInline() {
+function adSlot(gptId, boxId) {
   return '' +
     '<div class="ad-inline" role="complementary" aria-label="Advertisement">' +
       '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box" id="ad-box-inline">' +
-        '<div id="div-gpt-ad-1783998391391-0"></div>' +
+      '<div class="ad-box" id="' + boxId + '">' +
+        '<div id="' + gptId + '"></div>' +
       '</div>' +
     '</div>';
 }
 
-function adAnchor() {
-  return '' +
-    '<div class="ad-anchor" role="complementary" aria-label="Advertisement">' +
-      '<div class="ad-label">Advertisement</div>' +
-      '<div class="ad-box" id="ad-box-anchor">' +
-        '<div id="div-gpt-ad-1783998364331-0"></div>' +
-      '</div>' +
-    '</div>';
+/* Two in-flow ad slots per page (no fixed/anchored positioning). */
+function adTop() {
+  return adSlot('div-gpt-ad-1783998391391-0', 'ad-box-inline');
+}
+
+function adBottom() {
+  return adSlot('div-gpt-ad-1783998364331-0', 'ad-box-anchor');
 }
 
 function cookieBanner() {
@@ -445,9 +444,10 @@ function buildIndex() {
         '<a class="btn" href="' + href(questionPath(questions[0])) + '" onclick="startRandomQuiz();return false;">Start a Random ' + QUIZ_LEN + '-Question Quiz</a>' +
         ' <a class="btn btn-ghost" href="#bank">Browse All Questions</a>' +
       '</div>' +
-      adInline() +
+      adTop() +
       '<a id="bank"></a>' +
       sections +
+      adBottom() +
       '<div class="card">' +
         '<h2>How it works</h2>' +
         '<p>You can answer questions in any order. After each answer you land on its own page with a short interpretation, then continue to the next question in your quiz. When you have answered some, open your <a href="' + RESULT_HREF + '">personality snapshot</a>.</p>' +
@@ -455,7 +455,6 @@ function buildIndex() {
       '</div>' +
     '</main>' +
     footer() +
-    adAnchor() +
     cookieBanner() +
     globalJs() +
     pageClose();
@@ -476,7 +475,7 @@ function buildQuestion(q) {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + HOME + '">&larr; Back to home</a>' +
-      adInline() +
+      adTop() +
       '<div class="card">' +
         '<span class="q-index">' + esc(dim.code) + ' · ' + esc(dim.name) + '</span>' +
         '<h1>' + esc(q.question) + '</h1>' +
@@ -486,9 +485,9 @@ function buildQuestion(q) {
       '<div class="card">' +
         '<p>Pick the option that feels most natural. Every option opens its own page with a short, personalized interpretation before you continue.</p>' +
       '</div>' +
+      adBottom() +
     '</main>' +
     footer() +
-    adAnchor() +
     cookieBanner() +
     pageClose();
   writeFile(questionPath(q), html);
@@ -520,7 +519,7 @@ function buildOption(q, pos) {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + href(questionPath(q)) + '">&larr; Back to question</a>' +
-      adInline() +
+      adTop() +
       '<div class="card">' +
         '<span class="tag">' + esc(dim.code) + ' · ' + esc(dim.name) + ' &middot; Option ' + n + ' of 10</span>' +
         '<h1>Your answer</h1>' +
@@ -533,9 +532,9 @@ function buildOption(q, pos) {
         '<h2>What this means</h2>' +
         '<p>One choice is only a small signal. The full snapshot combines this with your other answers across the four dimensions.</p>' +
       '</div>' +
+      adBottom() +
     '</main>' +
     footer() +
-    adAnchor() +
     cookieBanner() +
     '<script>' +
     '(function(){' +
@@ -559,7 +558,7 @@ function buildResult() {
     header('home') +
     '<main>' +
       '<a class="back-link" href="' + HOME + '">&larr; Back to home</a>' +
-      adInline() +
+      adTop() +
       '<div class="card">' +
         '<h1>Your Personality Snapshot</h1>' +
         '<p class="lead">Based on the questions you answered, here is a simple, entertainment-only sketch of your style.</p>' +
@@ -570,9 +569,9 @@ function buildResult() {
         '<p>This quiz covers all four MBTI dimensions (energy, information, decisions, structure). It is a friendly reflection tool, not a clinical test. Real personality is broader and changes with context.</p>' +
         '<p><a class="btn" href="' + HOME + '" onclick="startRandomQuiz();return false;">Start a New Random Quiz</a></p>' +
       '</div>' +
+      adBottom() +
     '</main>' +
     footer() +
-    adAnchor() +
     cookieBanner() +
     globalJs() +
     '<script>' +
@@ -627,14 +626,14 @@ function legalPage(file, title, h1, paras, active) {
   var html = pageHead(title, desc, file) +
     header(active) +
     '<main>' +
-      adInline() +
+      adTop() +
       '<div class="card">' +
         '<h1>' + esc(h1) + '</h1>' +
         body +
       '</div>' +
+      adBottom() +
     '</main>' +
     footer() +
-    adAnchor() +
     cookieBanner() +
     pageClose();
   writeFile(file, html);
