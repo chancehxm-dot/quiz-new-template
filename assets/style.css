@@ -153,6 +153,55 @@ p { margin: 0 0 14px; }
   font-size: 15px;
 }
 
+.hero .lead { font-size: 19px; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+  margin-left: 8px;
+}
+
+.btn-ghost:hover {
+  background: #eef2ff;
+  text-decoration: none;
+}
+
+.dim-section {
+  margin-top: 8px;
+}
+
+.dim-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.dim-code {
+  font-size: 14px;
+  font-weight: 700;
+  background: #eef2ff;
+  color: var(--brand);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.dim-intro {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.dim-section .card { margin-bottom: 16px; }
+
+.dim-section h3 {
+  font-size: 19px;
+  margin: 6px 0 8px;
+}
+
+.dim-section h3 a { color: var(--ink); }
+.dim-section h3 a:hover { color: var(--brand); text-decoration: none; }
+
 .btn {
   display: inline-block;
   background: var(--brand);
